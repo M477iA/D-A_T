@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Damian &amp; Amira — Tango</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Light palette */
+      --bg:          #faf8f2;
+      --bg-alt:      #f3ece0;
+      --bg-surface:  #eee6d6;
+      --text:        #0d0b09;
+      --text-muted:  rgba(13,11,9,0.52);
+      --text-faint:  rgba(13,11,9,0.28);
+      --gold:        #9a7228;
+      --gold-light:  #b98e3a;
+      --gold-dim:    rgba(154,114,40,0.13);
+      --border:      rgba(13,11,9,0.09);
+      --border-gold: rgba(154,114,40,0.22);
+
+      /* Hero-only (dark video) */
+      --hero-cream:       #f0e9db;
+      --hero-cream-muted: rgba(240,233,219,0.55);
+
+      --f-display: 'Cormorant Garamond', Georgia, serif;
+      --f-ui:      'Raleway', sans-serif;
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-circ: cubic-bezier(0, 0.55, 0.45, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--f-ui);
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CURSOR ─────────────────────────────────────── */
+    #cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s var(--ease-out-expo), height 0.3s var(--ease-out-expo);
+    }
+    #cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(154,114,40,0.45);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s var(--ease-out-expo), height 0.4s var(--ease-out-expo), border-color 0.3s;
+    }
+    body:has(a:hover) #cursor-ring,
+    body:has(button:hover) #cursor-ring { width: 54px; height: 54px; border-color: var(--gold); }
+
+    /* ─── NAVIGATION ─────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 26px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      transition: background 0.55s ease, padding 0.45s ease, box-shadow 0.45s ease;
+    }
+    nav.scrolled {
+      background: rgba(250,248,242,0.93);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 16px 48px;
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    /* Logo */
+    .nav-logo {
+      text-decoration: none;
+      opacity: 0;
+      animation: fadeDown 1s var(--ease-out-expo) 2.4s forwards;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+    }
+    .nav-logo img {
+      height: 56px;
+      width: auto;
+      display: block;
+      transition: opacity 0.45s ease;
+      position: absolute;
+    }
+    .nav-logo img.logo-white { opacity: 1; }
+    .nav-logo img.logo-black { opacity: 0; }
+    .nav-logo { position: relative; height: 56px; min-width: 80px; }
+    nav.scrolled .nav-logo img.logo-white { opacity: 0; }
+    nav.scrolled .nav-logo img.logo-black { opacity: 1; }
+
+    /* Center links */
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+      opacity: 0;
+      animation: fadeDown 1s var(--ease-out-expo) 2.55s forwards;
+    }
+    .nav-links a {
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(240,233,219,0.7);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s var(--ease-out-expo);
+    }
+    .nav-links a:hover::after { width: 100%; }
+    nav.scrolled .nav-links a { color: var(--text-muted); }
+    nav.scrolled .nav-links a:hover { color: var(--text); }
+
+    /* Right cluster: socials + lang */
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      opacity: 0;
+      animation: fadeDown 1s var(--ease-out-expo) 2.7s forwards;
+    }
+
+    /* Social icons */
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,146,86,0.45);
+      color: var(--gold-light);
+      text-decoration: none;
+      transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.3s var(--ease-out-expo);
+    }
+    .nav-social-link svg { width: 14px; height: 14px; }
+    .nav-social-link:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-light);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    nav.scrolled .nav-social-link { border-color: var(--border-gold); color: var(--gold); }
+    nav.scrolled .nav-social-link:hover { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+    /* Divider */
+    .nav-divider {
+      width: 1px; height: 18px;
+      background: rgba(240,233,219,0.2);
+      transition: background 0.45s;
+    }
+    nav.scrolled .nav-divider { background: var(--border); }
+
+    /* Language toggle */
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      font-family: var(--f-ui);
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      color: rgba(240,233,219,0.4);
+      cursor: none;
+      padding: 4px 6px;
+      transition: color 0.3s;
+      text-transform: uppercase;
+    }
+    .lang-btn.active { color: var(--gold-light); font-weight: 400; }
+    .lang-sep {
+      font-size: 0.55rem;
+      color: rgba(240,233,219,0.2);
+      transition: color 0.45s;
+    }
+    nav.scrolled .lang-btn { color: var(--text-faint); }
+    nav.scrolled .lang-btn.active { color: var(--gold); }
+    nav.scrolled .lang-sep { color: var(--border); }
+
+    /* ─── HERO ───────────────────────────────────────── */
+    #hero {
+      position: relative;
+      width: 100%;
+      height: 100svh;
+      overflow: hidden;
+      background: #080806;
+    }
+
+    #hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: videoReveal 2.2s ease 0.3s forwards;
+    }
+
+    /* Vignette + bottom fade to white */
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(5,4,3,0.5) 75%, rgba(5,4,3,0.88) 100%),
+        linear-gradient(to bottom, rgba(5,4,3,0.38) 0%, transparent 18%, transparent 62%, rgba(5,4,3,0.8) 88%, var(--bg) 100%);
+    }
+
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.44em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 1.2s var(--ease-out-expo) 1.6s forwards;
+    }
+
+    .hero-names {
+      font-family: var(--f-display);
+      font-size: clamp(4.5rem, 11vw, 10rem);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      color: var(--hero-cream);
+      opacity: 0;
+      animation: fadeUp 1.4s var(--ease-out-expo) 1.9s forwards;
+    }
+    .hero-names em { font-style: italic; color: var(--gold-light); font-weight: 300; }
+
+    .hero-rule {
+      width: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+      margin: 30px auto;
+      animation: ruleExpand 1.2s var(--ease-out-expo) 2.2s forwards;
+    }
+
+    .hero-tagline {
+      font-family: var(--f-display);
+      font-size: clamp(1rem, 2.2vw, 1.45rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.06em;
+      color: var(--hero-cream-muted);
+      opacity: 0;
+      animation: fadeUp 1.2s var(--ease-out-expo) 2.3s forwards;
+    }
+
+    .hero-champion {
+      width: clamp(60px, 6vw, 90px);
+      margin-top: 1.4rem;
+      opacity: 0;
+      filter: sepia(1) saturate(3) hue-rotate(8deg) brightness(0.82);
+      animation: fadeUp 1s ease 2.7s forwards;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 38px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out-expo) 3s forwards;
+    }
+    .hero-scroll span {
+      font-size: 0.53rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-weight: 300;
+    }
+    .scroll-line {
+      width: 1px; height: 44px;
+      background: linear-gradient(to bottom, var(--gold-light), transparent);
+      animation: scrollPulse 2.2s ease-in-out 3.5s infinite;
+    }
+
+    /* ─── SHARED SECTION STYLES ──────────────────────── */
+    section { position: relative; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.32s; }
+    .reveal-delay-4 { transition-delay: 0.46s; }
+
+    .section-label {
+      font-size: 0.57rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 300;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 26px; height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ─── ABOUT ──────────────────────────────────────── */
+    #about {
+      background: var(--bg);
+      padding: 140px 48px;
+      border-top: none;
+    }
+    .about-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-heading {
+      font-family: var(--f-display);
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+    .about-heading em { font-style: italic; color: var(--gold); }
+
+    .about-text {
+      font-size: 0.93rem;
+      line-height: 1.88;
+      color: var(--text-muted);
+      font-weight: 300;
+      max-width: 480px;
+    }
+    .about-text + .about-text { margin-top: 18px; }
+
+    .stat-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-row:first-child { border-top: 1px solid var(--border); }
+    .stat-num {
+      font-family: var(--f-display);
+      font-size: clamp(3.2rem, 5.5vw, 5rem);
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      min-width: 100px;
+    }
+    .stat-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 300;
+      line-height: 1.65;
+      padding-bottom: 6px;
+    }
+
+    /* ─── QUOTE ──────────────────────────────────────── */
+    #quote {
+      background: #0a0a0a;
+      padding: 140px 48px;
+      overflow: hidden;
+      position: relative;
+    }
+    .quote-inner {
+      max-width: 880px; margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .quote-mark {
+      font-family: var(--f-display);
+      font-size: 14rem;
+      line-height: 0.6;
+      position: absolute;
+      top: -20px; left: -30px;
+      pointer-events: none;
+      font-weight: 300;
+      color: rgba(255,255,255,0.06);
+    }
+    .quote-text {
+      font-family: var(--f-display);
+      font-size: clamp(1.8rem, 3.6vw, 3rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.48;
+      color: #f0e9db;
+      position: relative; z-index: 1;
+    }
+    .quote-attr {
+      margin-top: 38px;
+      font-size: 0.58rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-weight: 300;
+    }
+    .quote-bg-image {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: clamp(220px, 28vw, 420px);
+      height: auto;
+      display: block;
+      object-fit: cover;
+      object-position: top;
+      z-index: 1;
+      opacity: 0.72;
+      mask-image: linear-gradient(to left, rgba(0,0,0,0.9) 50%, transparent 100%),
+                  linear-gradient(to top, rgba(0,0,0,0.9) 60%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.9) 50%, transparent 100%),
+                          linear-gradient(to top, rgba(0,0,0,0.9) 60%, transparent 100%);
+      mask-composite: intersect;
+      -webkit-mask-composite: source-in;
+    }
+
+    /* ─── OFFERINGS ──────────────────────────────────── */
+    #offerings {
+      background: var(--bg);
+      padding: 140px 48px;
+    }
+    .offerings-inner { max-width: 1200px; margin: 0 auto; }
+    .offerings-header {
+      margin-bottom: 72px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .offerings-heading {
+      font-family: var(--f-display);
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.08;
+    }
+    .offerings-heading em { font-style: italic; color: var(--gold); }
+    .offerings-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 280px;
+      line-height: 1.75;
+      font-weight: 300;
+      text-align: right;
+    }
+
+    /* ─── OFFERINGS BODY (2×2 grid + portrait video) ── */
+    .offerings-header { margin-bottom: 48px; }
+
+    .offerings-body {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      align-items: stretch;
+    }
+
+    .offerings-body .offerings-grid {
+      flex: 0 0 62%;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .offerings-side-video {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      min-height: 520px;
+    }
+
+    .offerings-side-video video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+      filter: grayscale(1);
+    }
+
+    .offerings-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+    .offering-card {
+      background: var(--bg);
+      padding: 44px 32px;
+      display: flex; flex-direction: column; gap: 18px;
+      transition: background 0.35s ease;
+      cursor: none;
+    }
+    .offering-card:hover { background: var(--bg-alt); }
+    .offering-num {
+      font-family: var(--f-display);
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+    }
+    .offering-title {
+      font-family: var(--f-display);
+      font-size: clamp(1.5rem, 1.85vw, 2.1rem);
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+    .offering-rule {
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.5s var(--ease-out-expo);
+    }
+    .offering-card:hover .offering-rule { width: 30px; }
+    .offering-desc {
+      font-size: 0.8rem;
+      line-height: 1.82;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+    .offering-arrow {
+      margin-top: auto;
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.3s, transform 0.4s var(--ease-out-expo);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .offering-card:hover .offering-arrow { opacity: 1; transform: translateX(0); }
+
+    /* ─── VIDEOS ─────────────────────────────────────── */
+    #philosophy {
+      background: #0a0a0a;
+      padding: 120px 48px;
+    }
+    .videos-inner {
+      max-width: 1280px; margin: 0 auto;
+    }
+    .videos-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+    .videos-heading {
+      font-family: var(--f-display);
+      font-size: clamp(3rem, 5vw, 5rem);
+      font-weight: 300;
+      color: #f0e9db;
+      line-height: 1.05;
+    }
+    .videos-heading em { font-style: italic; color: var(--gold-light); }
+    #philosophy .section-label { color: var(--gold-light); justify-content: center; padding-left: 0; }
+    #philosophy .section-label::before { background: var(--gold-light); }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .video-item { display: flex; flex-direction: column; gap: 0; }
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: #111;
+      border: 1px solid rgba(154,114,40,0.18);
+    }
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+      filter: grayscale(1);
+      transition: filter 0.5s ease;
+    }
+    .video-wrap:hover iframe { filter: grayscale(0); }
+    @media (max-width: 900px) {
+      .videos-grid { grid-template-columns: 1fr; }
+    }
+
+    /* kept for any residual references */
+    .philosophy-item-title {
+      font-family: var(--f-display);
+      font-size: 1.45rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .philosophy-item-text {
+      font-size: 0.86rem;
+      line-height: 1.88;
+      color: var(--text-muted);
+      font-weight: 300;
+      max-width: 560px;
+    }
+
+    /* ─── CONTACT ────────────────────────────────────── */
+    #contact {
+      background: var(--bg);
+      padding: 160px 48px;
+    }
+    .contact-inner {
+      max-width: 640px; margin: 0 auto;
+      text-align: center;
+    }
+    .contact-heading {
+      font-family: var(--f-display);
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
+    .contact-heading em { font-style: italic; color: var(--gold); }
+    .contact-sub {
+      font-size: 0.84rem;
+      line-height: 1.82;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-bottom: 56px;
+    }
+
+    .contact-form { display: flex; flex-direction: column; gap: 18px; text-align: left; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    .form-group label {
+      font-size: 0.57rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 300;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 11px 0;
+      color: var(--text);
+      font-family: var(--f-ui);
+      font-size: 0.86rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+      -webkit-appearance: none; appearance: none;
+      cursor: none;
+    }
+    .form-group select option { background: var(--bg); color: var(--text); }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--text-faint); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--gold); }
+    .form-group textarea { resize: none; min-height: 96px; }
+
+    .submit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 18px;
+      padding: 16px 42px;
+      background: transparent;
+      border: 1px solid var(--border-gold);
+      color: var(--text);
+      font-family: var(--f-ui);
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+      align-self: flex-start;
+    }
+    .submit-btn:hover { background: var(--gold); border-color: var(--gold); color: #fff; }
+    .btn-arrow { font-size: 0.88rem; transition: transform 0.4s var(--ease-out-expo); }
+    .submit-btn:hover .btn-arrow { transform: translateX(4px); }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: #0a0a0a;
+      padding: 80px 48px 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      text-align: center;
+    }
+    .footer-logo-img {
+      height: 72px;
+      width: auto;
+      display: block;
+      margin: 0 auto 18px;
+      opacity: 0.82;
+      filter: brightness(1.1);
+      transition: opacity 0.3s;
+    }
+    .footer-logo-img:hover { opacity: 1; }
+    .footer-brand {
+      font-family: var(--f-display);
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      color: rgba(240,233,219,0.55);
+      line-height: 1;
+      margin-bottom: 0;
+    }
+    .footer-brand span { color: var(--gold); }
+    .footer-rule {
+      width: 40px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+      margin: 22px auto;
+    }
+    .footer-socials {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 44px;
+    }
+    .footer-socials a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,146,86,0.35);
+      color: var(--gold-light);
+      text-decoration: none;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease-out-expo);
+    }
+    .footer-socials a svg { width: 14px; height: 14px; }
+    .footer-socials a:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-light);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .footer-divider {
+      width: 100%; height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 28px;
+    }
+    .footer-bottom {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-copy {
+      align-self: flex-start;
+      font-size: 0.56rem;
+      letter-spacing: 0.18em;
+      color: rgba(240,233,219,0.22);
+      font-weight: 300;
+    }
+    .footer-credit {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      color: rgba(240,233,219,0.45);
+      font-weight: 300;
+      text-transform: uppercase;
+    }
+    .footer-credit a {
+      color: var(--gold-light);
+      text-decoration: none;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      font-size: 0.78rem;
+      transition: opacity 0.3s;
+      opacity: 0.9;
+    }
+    .footer-credit a:hover { opacity: 1; }
+
+    /* ─── WHATSAPP STICKY ───────────────────────────── */
+    .wa-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 500;
+      width: 52px; height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.3s var(--ease-out-expo), opacity 0.3s;
+      opacity: 0.88;
+    }
+    .wa-btn:hover { transform: scale(1.12); opacity: 1; }
+    .wa-btn img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      position: absolute;
+      transition: opacity 0.4s ease;
+    }
+    .wa-btn .wa-white { opacity: 1; }
+    .wa-btn .wa-black { opacity: 0; }
+    .wa-btn.on-light .wa-white { opacity: 0; }
+    .wa-btn.on-light .wa-black { opacity: 1; }
+
+    /* ─── KEYFRAMES ──────────────────────────────────── */
+    @keyframes videoReveal {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes ruleExpand {
+      from { width: 0; }
+      to   { width: 110px; }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.7); transform-origin: top; }
+      50%       { opacity: 1;   transform: scaleY(1); }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 1000px) {
+      .about-inner { grid-template-columns: 1fr; gap: 56px; }
+      .about-text { max-width: 100%; }
+      .offerings-header { flex-direction: column; align-items: flex-start; }
+      .offerings-sub { text-align: left; max-width: 100%; }
+      .offerings-body { flex-direction: column; }
+      .offerings-body .offerings-grid { flex: none; }
+      .offerings-side-video { min-height: 420px; }
+      .philosophy-inner { grid-template-columns: 1fr; gap: 44px; }
+      .philosophy-left { position: static; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      nav.scrolled { padding: 14px 24px; }
+      .nav-links { display: none; }
+      #about, #quote, #offerings, #philosophy { padding: 96px 24px; }
+      #contact { padding: 120px 24px; }
+      footer { padding: 44px 24px; flex-direction: column; align-items: flex-start; }
+      .offerings-side-video { min-height: 320px; }
+    }
+    @media (max-width: 580px) {
+      .offerings-body .offerings-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .quote-mark { font-size: 8rem; left: -8px; }
+    }
+  </style>
+</head>
+<body data-lang="en">
+
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ─── NAVIGATION ─────────────────────────────────── -->
+  <nav id="nav">
+    <a href="#hero" class="nav-logo" aria-label="Damian & Amira">
+      <img src="assets/images/D%26A%20Tango%20Blanco.png" alt="D&A Tango" class="logo-white">
+      <img src="assets/images/D%26A%20Tango%20Black.png"  alt="D&A Tango" class="logo-black">
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#about"     class="t" data-en="About"        data-es="Sobre Nosotros">About</a></li>
+      <li><a href="#offerings" class="t" data-en="Work with Us" data-es="Trabaja con Nosotros">Work with Us</a></li>
+      <li><a href="#philosophy" class="t" data-en="Watch"        data-es="Ver">Watch</a></li>
+      <li><a href="#contact"   class="t" data-en="Contact"      data-es="Contacto">Contact</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <!-- Social icons -->
+      <div class="nav-socials">
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/amiraydamian_tango/" target="_blank" rel="noopener" class="nav-social-link" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/AmiraLunaDanza" target="_blank" rel="noopener" class="nav-social-link" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+        </a>
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@damianyamiratango" target="_blank" rel="noopener" class="nav-social-link" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47a2.78 2.78 0 0 0-1.95 1.95A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <!-- Language toggle -->
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang-btn="en">EN</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" data-lang-btn="es">ES</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ───────────────────────────────────────── -->
+  <section id="hero">
+    <video id="hero-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/video/Damian%26Amira.mp4" type="video/mp4">
+    </video>
+    <div class="hero-vignette"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow t" data-en="Professional Tango Artists" data-es="Artistas de Tango Profesionales">Professional Tango Artists</p>
+      <h1 class="hero-names">Damian<br><em>&amp; Amira</em></h1>
+      <p class="hero-tagline t" data-en="Where passion meets precision." data-es="Donde la pasión encuentra la precisión.">Where passion meets precision.</p>
+      <img src="assets/images/Campeones%20Nacionales%202025.png" alt="Campeones Nacionales 2025" class="hero-champion">
+    </div>
+  </section>
+
+  <!-- ─── ABOUT ─────────────────────────────────────── -->
+  <section id="about">
+    <div class="about-inner">
+      <div class="about-left">
+        <p class="section-label reveal t" data-en="Our Story" data-es="Nuestra Historia">Our Story</p>
+        <h2 class="about-heading reveal reveal-delay-1 t-h"
+          data-en="The art<br>of <em>two</em>"
+          data-es="El arte<br>de <em>dos</em>">The art<br>of <em>two</em></h2>
+        <p class="about-text reveal reveal-delay-2 t"
+          data-en="Damian and Amira have spent over a decade refining a language spoken through movement. Trained in Buenos Aires and performing across four continents, their tango carries the weight of tradition and the breath of the contemporary."
+          data-es="Damian y Amira han pasado más de una década perfeccionando un lenguaje que se habla a través del movimiento. Formados en Buenos Aires y actuando en cuatro continentes, su tango lleva el peso de la tradición y el aliento de lo contemporáneo.">
+          Damian and Amira have spent over a decade refining a language spoken through movement. Trained in Buenos Aires and performing across four continents, their tango carries the weight of tradition and the breath of the contemporary.
+        </p>
+        <p class="about-text reveal reveal-delay-3 t"
+          data-en="Together they move as one — reading each other without words, navigating the floor with quiet authority. Their dance is not performance alone; it is a conversation between two people who have chosen to listen."
+          data-es="Juntos se mueven como uno solo — comunicándose sin palabras, recorriendo la pista con una autoridad silenciosa. Su danza no es solo actuación; es una conversación entre dos personas que han elegido escucharse.">
+          Together they move as one — reading each other without words, navigating the floor with quiet authority. Their dance is not performance alone; it is a conversation between two people who have chosen to listen.
+        </p>
+      </div>
+      <div class="about-right">
+        <div class="stat-row reveal">
+          <div class="stat-num">14+</div>
+          <div class="stat-label t" data-en="Years of&#10;collaboration" data-es="Años de&#10;colaboración">Years of<br>collaboration</div>
+        </div>
+        <div class="stat-row reveal reveal-delay-1">
+          <div class="stat-num">40+</div>
+          <div class="stat-label t" data-en="Countries&#10;performed in" data-es="Países donde&#10;han actuado">Countries<br>performed in</div>
+        </div>
+        <div class="stat-row reveal reveal-delay-2">
+          <div class="stat-num">3</div>
+          <div class="stat-label t" data-en="International&#10;tango championships" data-es="Campeonatos internacionales&#10;de tango">International<br>tango championships</div>
+        </div>
+        <div class="stat-row reveal reveal-delay-3">
+          <div class="stat-num">∞</div>
+          <div class="stat-label t" data-en="Steps&#10;still to discover" data-es="Pasos aún&#10;por descubrir">Steps<br>still to discover</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── QUOTE ─────────────────────────────────────── -->
+  <section id="quote">
+    <img src="assets/images/Damian%26Amira_image1.png" alt="" class="quote-bg-image" aria-hidden="true">
+    <div class="quote-inner">
+      <div class="quote-mark reveal">"</div>
+      <p class="quote-text reveal reveal-delay-1 t-h"
+        data-en="&ldquo;Tango is not about the steps.<br>It is about the silences between them.&rdquo;"
+        data-es="&ldquo;El tango no se trata de los pasos.<br>Se trata de los silencios entre ellos.&rdquo;">
+        &ldquo;Tango is not about the steps.<br>It is about the silences between them.&rdquo;
+      </p>
+      <p class="quote-attr reveal reveal-delay-2">— Damian &amp; Amira</p>
+    </div>
+  </section>
+
+  <!-- ─── OFFERINGS ─────────────────────────────────── -->
+  <section id="offerings">
+    <div class="offerings-inner">
+      <div class="offerings-header">
+        <div>
+          <p class="section-label reveal t" data-en="What We Offer" data-es="Lo Que Ofrecemos">What We Offer</p>
+          <h2 class="offerings-heading reveal reveal-delay-1 t-h"
+            data-en="Work<br>with <em>us</em>"
+            data-es="Trabaja<br><em>con nosotros</em>">Work<br>with <em>us</em></h2>
+        </div>
+        <p class="offerings-sub reveal reveal-delay-2 t"
+          data-en="Each engagement is tailored — from the most intimate private lesson to the most expansive stage production."
+          data-es="Cada colaboración es personalizada — desde la clase privada más íntima hasta la producción escénica más ambiciosa.">
+          Each engagement is tailored — from the most intimate private lesson to the most expansive stage production.
+        </p>
+      </div>
+
+      <div class="offerings-body">
+      <div class="offerings-grid">
+        <div class="offering-card reveal">
+          <span class="offering-num">01</span>
+          <h3 class="offering-title t" data-en="Performance" data-es="Actuación">Performance</h3>
+          <div class="offering-rule"></div>
+          <p class="offering-desc t"
+            data-en="Live tango for galas, cultural events, corporate functions, and private celebrations. A show calibrated to your audience and venue."
+            data-es="Espectáculos de tango en vivo para galas, eventos culturales, funciones corporativas y celebraciones privadas. Un show a medida de tu audiencia y espacio.">
+            Live tango for galas, cultural events, corporate functions, and private celebrations. A show calibrated to your audience and venue.
+          </p>
+          <a href="#contact" class="offering-arrow t" data-en="Enquire →" data-es="Consultar →">Enquire →</a>
+        </div>
+        <div class="offering-card reveal reveal-delay-1">
+          <span class="offering-num">02</span>
+          <h3 class="offering-title t" data-en="Private Lessons" data-es="Clases Privadas">Private Lessons</h3>
+          <div class="offering-rule"></div>
+          <p class="offering-desc t"
+            data-en="Intimate, one-on-one instruction at any level. Absolute beginners to advanced social dancers. Every lesson shaped around you."
+            data-es="Instrucción íntima, uno a uno, para cualquier nivel. Desde principiantes absolutos hasta bailarines avanzados. Cada clase diseñada para ti.">
+            Intimate, one-on-one instruction at any level. Absolute beginners to advanced social dancers. Every lesson shaped around you.
+          </p>
+          <a href="#contact" class="offering-arrow t" data-en="Enquire →" data-es="Consultar →">Enquire →</a>
+        </div>
+        <div class="offering-card reveal reveal-delay-2">
+          <span class="offering-num">03</span>
+          <h3 class="offering-title t" data-en="Taxi Dancer" data-es="Taxi Dancer">Taxi Dancer</h3>
+          <div class="offering-rule"></div>
+          <p class="offering-desc t"
+            data-en="Your personal escort into Buenos Aires' finest milongas. We dance with you, guide you through the unwritten codes of the floor, and immerse you in an authentic porteño experience that no tour can offer."
+            data-es="Tu acompañante exclusivo en los mejores salones milongueros de Buenos Aires. Bailamos contigo, te guiamos por los códigos de la pista y te sumergimos en una experiencia porteña auténtica que ningún tour puede ofrecerte.">
+            Your personal escort into Buenos Aires' finest milongas. We dance with you, guide you through the unwritten codes of the floor, and immerse you in an authentic porteño experience that no tour can offer.
+          </p>
+          <a href="#contact" class="offering-arrow t" data-en="Enquire →" data-es="Consultar →">Enquire →</a>
+        </div>
+        <div class="offering-card reveal reveal-delay-3">
+          <span class="offering-num">04</span>
+          <h3 class="offering-title t" data-en="Choreography" data-es="Coreografía">Choreography</h3>
+          <div class="offering-rule"></div>
+          <p class="offering-desc t"
+            data-en="Custom pieces for weddings, theatrical productions, film, and television. From concept to performance, a complete creative collaboration."
+            data-es="Piezas a medida para bodas, producciones teatrales, cine y televisión. Del concepto a la actuación, una colaboración creativa completa.">
+            Custom pieces for weddings, theatrical productions, film, and television. From concept to performance, a complete creative collaboration.
+          </p>
+          <a href="#contact" class="offering-arrow t" data-en="Enquire →" data-es="Consultar →">Enquire →</a>
+        </div>
+      </div>
+
+      <div class="offerings-side-video">
+        <video autoplay muted loop playsinline preload="auto">
+          <source src="assets/video/D%26Tango%20clases.mp4" type="video/mp4">
+        </video>
+      </div>
+      </div><!-- /.offerings-body -->
+    </div>
+  </section>
+
+  <!-- ─── VIDEOS ───────────────────────────────────── -->
+  <section id="philosophy">
+    <div class="videos-inner">
+      <div class="videos-header">
+        <p class="section-label reveal t" data-en="Watch &amp; Feel" data-es="Míralos Bailar">Watch &amp; Feel</p>
+        <h2 class="videos-heading reveal reveal-delay-1 t-h"
+          data-en="In <em>Motion</em>"
+          data-es="En <em>Movimiento</em>">In <em>Motion</em></h2>
+      </div>
+      <div class="videos-grid">
+        <div class="video-item reveal">
+          <div class="video-wrap">
+            <iframe src="https://www.youtube.com/embed/xZAcA_6cXF0" title="Damian & Amira – Video 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="video-item reveal reveal-delay-1">
+          <div class="video-wrap">
+            <iframe src="https://www.youtube.com/embed/yH3YQhk-9C0?t=35" title="Damian & Amira – Video 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="video-item reveal reveal-delay-2">
+          <div class="video-wrap">
+            <iframe src="https://www.youtube.com/embed/4FylBEjvn0U" title="Damian & Amira – Video 3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ────────────────────────────────────── -->
+  <section id="contact">
+    <div class="contact-inner">
+      <p class="section-label reveal" style="justify-content:center; padding-left:0;">
+        <span style="display:inline-block;width:26px;height:1px;background:var(--gold);margin-right:16px;vertical-align:middle;flex-shrink:0;"></span>
+        <span class="t" data-en="Get in Touch" data-es="Contáctanos">Get in Touch</span>
+      </p>
+      <h2 class="contact-heading reveal reveal-delay-1 t-h"
+        data-en="Let's <em>begin</em>"
+        data-es="<em>Comencemos</em>">Let's <em>begin</em></h2>
+      <p class="contact-sub reveal reveal-delay-2 t"
+        data-en="Whether you're planning an event, starting your tango journey, or looking to collaborate — we'd love to hear from you."
+        data-es="Ya sea que estés planeando un evento, comenzando tu camino en el tango o buscando colaborar — nos encantaría saber de ti.">
+        Whether you're planning an event, starting your tango journey, or looking to collaborate — we'd love to hear from you.
+      </p>
+      <form class="contact-form reveal reveal-delay-3" action="https://formspree.io/f/xlgalkkr" method="POST">
+        <!-- hidden fields for Formspree -->
+        <input type="hidden" name="_subject" value="New enquiry — Damian &amp; Amira">
+        <input type="hidden" name="_cc" value="parola.mattia1@gmail.com">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="t" data-en="Name" data-es="Nombre">Name</label>
+            <input type="text" id="name" name="name" required
+              data-ph-en="Your name" data-ph-es="Tu nombre"
+              placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label class="t" data-en="Email" data-es="Correo electrónico">Email</label>
+            <input type="email" id="email" name="email" required
+              data-ph-en="your@email.com" data-ph-es="tu@correo.com"
+              placeholder="your@email.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="t" data-en="I'm interested in" data-es="Me interesa">I'm interested in</label>
+          <select id="interest" name="interest">
+            <option value="" disabled selected
+              data-en="Select an option" data-es="Selecciona una opción">Select an option</option>
+            <option data-en="Performance / Show"  data-es="Actuación / Espectáculo">Performance / Show</option>
+            <option data-en="Private Lessons"     data-es="Clases Privadas">Private Lessons</option>
+            <option data-en="Taxi Dancer" data-es="Taxi Dancer">Taxi Dancer</option>
+            <option data-en="Choreography"        data-es="Coreografía">Choreography</option>
+            <option data-en="Something else"      data-es="Algo más">Something else</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="t" data-en="Message" data-es="Mensaje">Message</label>
+          <textarea id="message" name="message"
+            data-ph-en="Tell us about your vision..." data-ph-es="Cuéntanos sobre tu visión..."
+            placeholder="Tell us about your vision..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">
+          <span class="t" data-en="Send enquiry" data-es="Enviar consulta">Send enquiry</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────── -->
+  <footer>
+    <img src="assets/images/D%26A%20Tango%20Blanco.png" alt="D&A Tango" class="footer-logo-img">
+    <div class="footer-brand">Damian <span>&amp;</span> Amira</div>
+
+    <div class="footer-rule"></div>
+
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/amiraydamian_tango/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <a href="https://www.facebook.com/AmiraLunaDanza" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+        </svg>
+      </a>
+      <a href="https://www.youtube.com/@damianyamiratango" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47a2.78 2.78 0 0 0-1.95 1.95A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+          <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy t"
+        data-en="© 2026 Damian &amp; Amira. All rights reserved."
+        data-es="© 2026 Damian &amp; Amira. Todos los derechos reservados.">
+        &copy; 2026 Damian &amp; Amira. All rights reserved.
+      </p>
+      <p class="footer-credit t-h"
+        data-en="Website by &nbsp;<a href='https://prolianxe.com' target='_blank' rel='noopener'>PROLIANXE LLC</a>"
+        data-es="Sitio web por &nbsp;<a href='https://prolianxe.com' target='_blank' rel='noopener'>PROLIANXE LLC</a>">
+        Website by &nbsp;<a href="https://prolianxe.com" target="_blank" rel="noopener">PROLIANXE LLC</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ─── WHATSAPP STICKY ──────────────────────────── -->
+  <a href="https://wa.me/5491173630197" target="_blank" rel="noopener" class="wa-btn" aria-label="WhatsApp">
+    <img src="assets/images/WhatsApp%20White.png" alt="" class="wa-white">
+    <img src="assets/images/WhatsApp.png"         alt="" class="wa-black">
+  </a>
+
+  <script>
+    // ─── CURSOR ───────────────────────────────────────
+    const cursor     = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+    });
+    (function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      cursorRing.style.left = rx + 'px';
+      cursorRing.style.top  = ry + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+
+    // ─── SCROLLED NAV ─────────────────────────────────
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // ─── SCROLL REVEAL ────────────────────────────────
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ─── SMOOTH ANCHOR SCROLL ─────────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+
+    // ─── LANGUAGE SWITCHER ────────────────────────────
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.body.dataset.lang = lang;
+
+      // Simple text nodes
+      document.querySelectorAll('.t').forEach(el => {
+        if (el.dataset[lang]) el.textContent = el.dataset[lang];
+      });
+
+      // HTML nodes (contain <em>, <br> etc.)
+      document.querySelectorAll('.t-h').forEach(el => {
+        if (el.dataset[lang]) el.innerHTML = el.dataset[lang];
+      });
+
+      // Input/textarea placeholders
+      document.querySelectorAll('[data-ph-en]').forEach(el => {
+        const key = lang === 'en' ? 'phEn' : 'phEs';
+        if (el.dataset[key]) el.placeholder = el.dataset[key];
+      });
+
+      // Select options
+      document.querySelectorAll('select option').forEach(opt => {
+        if (opt.dataset[lang]) opt.textContent = opt.dataset[lang];
+      });
+
+      // Update active button
+      document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.langBtn === lang);
+      });
+    }
+
+    document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+      btn.addEventListener('click', () => setLang(btn.dataset.langBtn));
+    });
+
+    // ─── WHATSAPP ICON SWITCHER ───────────────────────
+    const waBtn       = document.querySelector('.wa-btn');
+    const darkSections = document.querySelectorAll('#hero, #quote, #philosophy, footer');
+
+    const waObserver = new IntersectionObserver(entries => {
+      // count how many dark sections are currently visible
+      let darkVisible = 0;
+      darkSections.forEach(sec => {
+        const r = sec.getBoundingClientRect();
+        // check if bottom-left corner (x=56, y=windowH-56) sits inside this section
+        const x = window.innerWidth - 56, y = window.innerHeight - 56;
+        if (r.top <= y && r.bottom >= y && r.left <= x && r.right >= x) darkVisible++;
+      });
+      waBtn.classList.toggle('on-light', darkVisible === 0);
+    }, { threshold: Array.from({length: 101}, (_, i) => i / 100) });
+
+    darkSections.forEach(sec => waObserver.observe(sec));
+
+    // also update on scroll for smooth tracking
+    window.addEventListener('scroll', () => {
+      let onDark = false;
+      darkSections.forEach(sec => {
+        const r = sec.getBoundingClientRect();
+        const y = window.innerHeight - 56;
+        if (r.top <= y && r.bottom >= y) onDark = true;
+      });
+      waBtn.classList.toggle('on-light', !onDark);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
