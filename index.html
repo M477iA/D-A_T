@@ -843,9 +843,8 @@
       opacity: 0.9;
     }
     .footer-credit a:hover { opacity: 1; }
-    .footer-agentiva-logo { display: inline-block; margin-top: 10px; opacity: 0.6; transition: opacity 0.3s; }
-    .footer-agentiva-logo:hover { opacity: 1; }
-    .footer-agentiva-logo img { height: 28px; width: auto; display: block; }
+    .footer-agentiva-inline { height: 20px; width: auto; vertical-align: middle; opacity: 0.7; transition: opacity 0.3s; }
+    .footer-credit a:has(.footer-agentiva-inline):hover .footer-agentiva-inline { opacity: 1; }
 
     /* ─── WHATSAPP STICKY ───────────────────────────── */
     .wa-btn {
@@ -1247,13 +1246,10 @@
         &copy; 2026 Damian &amp; Amira. All rights reserved.
       </p>
       <p class="footer-credit t-h"
-        data-en="Website by &nbsp;<a href='https://agentiva.com.ar' target='_blank' rel='noopener'>AGENTIVA</a>"
-        data-es="Sitio web por &nbsp;<a href='https://agentiva.com.ar' target='_blank' rel='noopener'>AGENTIVA</a>">
-        Website by &nbsp;<a href="https://agentiva.com.ar" target="_blank" rel="noopener">AGENTIVA</a>
+        data-en="Website by &nbsp;<a href='https://agentiva.com.ar' target='_blank' rel='noopener'><img src='assets/images/agentiva-logo.png' alt='Agentiva' class='footer-agentiva-inline'></a>"
+        data-es="Sitio web por &nbsp;<a href='https://agentiva.com.ar' target='_blank' rel='noopener'><img src='assets/images/agentiva-logo.png' alt='Agentiva' class='footer-agentiva-inline'></a>">
+        Website by &nbsp;<a href="https://agentiva.com.ar" target="_blank" rel="noopener"><img src="assets/images/agentiva-logo.png" alt="Agentiva" class="footer-agentiva-inline"></a>
       </p>
-      <a href="https://agentiva.com.ar" target="_blank" rel="noopener" class="footer-agentiva-logo">
-        <img src="assets/images/agentiva-logo.png" alt="Agentiva">
-      </a>
     </div>
   </footer>
 
