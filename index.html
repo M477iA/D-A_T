@@ -688,8 +688,19 @@
       line-height: 1.82;
       color: var(--text-muted);
       font-weight: 300;
-      margin-bottom: 56px;
+      margin-bottom: 20px;
     }
+    .contact-email-link {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+      text-decoration: none;
+      margin-bottom: 44px;
+      transition: color 0.3s;
+    }
+    .contact-email-link:hover { color: var(--gold-light); }
 
     .contact-form { display: flex; flex-direction: column; gap: 18px; text-align: left; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
@@ -787,8 +798,19 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-bottom: 44px;
+      margin-bottom: 18px;
     }
+    .footer-email {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 300;
+      letter-spacing: 0.07em;
+      color: rgba(240,233,219,0.55);
+      text-decoration: none;
+      margin-bottom: 36px;
+      transition: color 0.3s;
+    }
+    .footer-email:hover { color: rgba(240,233,219,0.9); }
     .footer-socials a {
       display: flex;
       align-items: center;
@@ -1165,6 +1187,9 @@
         data-es="Ya sea que estés planeando un evento, comenzando tu camino en el tango o buscando colaborar — nos encantaría saber de ti.">
         Whether you're planning an event, starting your tango journey, or looking to collaborate — we'd love to hear from you.
       </p>
+      <a href="mailto:reservas@damianyamiratango.com" class="contact-email-link reveal reveal-delay-2">
+        reservas@damianyamiratango.com
+      </a>
       <form class="contact-form reveal reveal-delay-3" action="https://formspree.io/f/xlgalkkr" method="POST">
         <!-- hidden fields for Formspree -->
         <input type="hidden" name="_subject" value="New enquiry — Damian &amp; Amira">
@@ -1236,6 +1261,10 @@
         </svg>
       </a>
     </div>
+
+    <a href="mailto:reservas@damianyamiratango.com" class="footer-email">
+      reservas@damianyamiratango.com
+    </a>
 
     <div class="footer-divider"></div>
 
